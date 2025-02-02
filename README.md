@@ -1,5 +1,7 @@
 # 4 DOF Robotic Manipulator Project  
 
+![image](https://github.com/user-attachments/assets/9eba6d73-6b1a-466b-8929-daa4e8e64571)
+
 ## Overview  
 This project involves designing a 4-degree of freedom (DOF) robotic manipulator for precise pick and place tasks, developed using SolidWorks as part of an Advanced Robotics laboratory course.  
 
