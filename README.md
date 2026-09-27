@@ -1,48 +1,40 @@
-# 4 DOF Robotic Manipulator Project  
+# Talk-to-the-Arm: Vision-Language-Action Demo
 
-![image](https://github.com/user-attachments/assets/9eba6d73-6b1a-466b-8929-daa4e8e64571)
+This project implements a small, from-scratch version of the vision-language-action (VLA) pattern behind models like RT-2, OpenVLA, $\pi$0, and GR00T.
 
-## Overview  
-This project involves designing a 4-degree of freedom (DOF) robotic manipulator for precise pick and place tasks, developed using SolidWorks as part of an Advanced Robotics laboratory course.  
+You can type or speak natural language commands like *"pick up the red block and place it on the shelf"*, and a Language Model parses it into an actionable plan that is verified, expanded into a trajectory, and executed live on a simulated 4-DOF robotic arm using Inverse Kinematics.
 
-## Key Specifications  
-- **Workspace:** 1-meter cylindrical reach  
-- **Material:** Aluminum  
-- **Weight Capacity:** Up to 1 kg objects  
-- **Total Weight:** Under 30 kg  
-- **Actuation:** DC electric motors  
-- **Configuration:** RRRR (Revolute-Revolute-Revolute-Revolute)  
+## Architecture
 
-## Project Components  
-- **Base**  
-- **Shoulder Joint**  
-- **Elbow Joint**  
-- **Wrist**  
-- **End Effector (Gripper)**  
+```mermaid
+flowchart LR
+  A[Text command] --> B[LLM Parser]
+  B --> C[Action Validator / Grounding]
+  C --> D[Motion Planner]
+  D --> E[IK Solver]
+  E --> F[Trajectory Executor]
+  F --> G[PyBullet Simulation]
+  G -. scene state .-> C
+```
 
-## Design Objectives  
-- Perform pick and place operations  
-- Lift and manipulate objects  
-- Provide flexible movement within workspace  
+## Quick Start
 
-## Key Design Advantages  
-- Lightweight aluminum construction  
-- Efficient DC motor actuation  
-- Versatile 4 DOF configuration  
-- Optimized strength-to-weight ratio  
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Run the demo:
+   ```bash
+   python main.py "pick up the red block and place it on the shelf"
+   ```
 
-## Technical Approach  
-- Comprehensive SolidWorks 3D modeling  
-- Detailed component design  
-- Strategic motor and joint selection  
-- Workspace and performance verification  
+## Background: CAD to Code
 
-## Potential Applications  
-- Automated manufacturing  
-- Laboratory robotics  
-- Precision handling tasks  
+The base of this project (`cad/` directory) originated from a SolidWorks mechanical design of a 4-DOF aluminum arm (revolute-revolute-revolute-revolute, up to 1 kg payload, 1 m workspace). This software stack was built to simulate that physical design and turn it into a smart agent using modern Language-Action capabilities.
 
-## Project Learning Outcomes  
-- Advanced robotic manipulator design  
-- Component integration  
-- Performance optimization strategies  
+## Technical Details
+
+- **Simulation:** PyBullet for fast, lightweight kinematic simulation.
+- **IK:** Position-target wrapper around PyBullet's solver.
+- **LLM Integration:** JSON schema-constrained prompting, with a local-first design (e.g. Ollama `qwen2.5`) or API fallback.
+- **Validation:** Emitted targets are verified against a hardcoded tabletop scene registry to prevent hallucinatory reaches.
